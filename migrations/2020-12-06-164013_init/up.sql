@@ -1,0 +1,22 @@
+CREATE TABLE users (
+	id SERIAL PRIMARY KEY,
+	username TEXT NOT NULL UNIQUE,
+	password BYTEA NOT NULL,
+	salt BYTEA NOT NULL
+);
+
+CREATE TABLE sessions (
+	id SERIAL PRIMARY KEY,
+	uuid UUID NOT NULL UNIQUE,
+	user_id INTEGER REFERENCES users(id),
+	expired BOOLEAN NOT NULL
+);
+
+CREATE TABLE ai_requests (
+	id SERIAL PRIMARY KEY,
+	session_id INTEGER NOT NULL REFERENCES sessions(id),
+	query TEXT NOT NULL,
+	query_created TIMESTAMP WITH TIME ZONE NOT NULL,
+	reply TEXT,
+	reply_created TIMESTAMP WITH TIME ZONE
+);

@@ -1,0 +1,66 @@
+schema {
+	query: Query
+	mutation: Mutation
+	subscription: Subscription
+}
+
+type Query {
+	aiRequest(aiRequestId: Int!): AiRequest!
+		@juniper(ownership: "owned", async: true)
+	unansweredAiRequests: [AiRequest!]!
+		@juniper(ownership: "owned", async: true)
+}
+
+type Mutation {
+	"""
+	If a valid session uuid is provided, it will become associated with this user and the same session will be
+	returned, otherwise a new session will be created.
+	"""
+	register(username: String!, password: String!): Session!
+		@juniper(ownership: "owned", async: true)
+
+	authAnon: Session! @juniper(ownership: "owned", async: true)
+
+	"""
+	If a valid session uuid is provided, it will become associated with this user and the same session will be
+	returned, otherwise a new session will be created.
+	"""
+	authUser(username: String!, password: String!): Session!
+		@juniper(ownership: "owned", async: true)
+
+	"""
+	If a valid session uuid is provided, expires session and returns true, otherwise returns false.
+	"""
+	logout: Boolean! @juniper(ownership: "owned", async: true)
+
+	createAiRequest(text: String!): AiRequest!
+		@juniper(ownership: "owned", async: true)
+
+	createAiReply(aiRequestId: Int!, text: String!): AiRequest!
+		@juniper(ownership: "owned", async: true)
+}
+
+type Subscription {
+	aiReply(aiRequestId: Int!): AiRequest!
+		@juniper(ownership: "owned", async: true)
+}
+
+type Session {
+	uuid: Uuid!
+}
+
+type AiRequest {
+	id: Int!
+	sessionId: Int!
+	query: String!
+	queryCreated: DateTimeUtc!
+	reply: String
+	replyCreated: DateTimeUtc
+	history: [AiRequest!]! @juniper(ownership: "owned", async: true)
+}
+
+# ISO 8601 string
+scalar DateTimeUtc
+
+# Hex string with dashes
+scalar Uuid

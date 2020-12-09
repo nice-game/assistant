@@ -1,0 +1,34 @@
+[package]
+name = "assistant"
+version = "0.1.0"
+authors = ["Icy Defiance <icydefiance@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+async-trait = "0.1.42"
+chrono = "0.4.19"
+rust-crypto = "0.2.36"
+db = { path = "lib/db" }
+diesel = { git = "https://github.com/diesel-rs/diesel", features = ["chrono", "r2d2", "postgres"] }
+dotenv = "0.15.0"
+futures = "0.3.8"
+juniper = { version = "0.15.1" }
+juniper-from-schema = { git = "https://github.com/davidpdrsn/juniper-from-schema" }
+juniper_graphql_ws = { version = "0.2.1" }
+juniper_warp = { version = "0.6.0", features = ["subscriptions"] }
+lazy_static = "1.4.0"
+log = "0.4.11"
+rand = "0.8.0"
+serde = { version = "1.0.118", features = ["derive"] }
+simple_logger = "1.11.0"
+tokio = { version = "0.2.23", features = ["blocking", "macros", "rt-threaded"] }
+# uuid version must match diesel and juniper's uuid dependencies
+uuid = { version = ">=0.7.0, <0.9.0", features = ["v4"] }
+warp = "0.2.5"
+
+[workspace]
+members = ["lib/db"]
+
+[profile.release]
+lto = true
+opt-level = "s"
